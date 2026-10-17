@@ -4,6 +4,7 @@ import java.util.List;
 
 import game.enums.CommandsEnum;
 import game.inputs.IInputs;
+import game.language.ILanguage; 
 import game.ui.IRenderer;
 import game.world.Grid;
 import game.world.Progress;
@@ -29,6 +30,7 @@ public class Level {
     private final List<Coin> coins;
     private final IInputs input;
     private final IRenderer renderer;
+    private final ILanguage language;
 
     private boolean running = true;
 
@@ -38,19 +40,21 @@ public class Level {
         Progress progress,
         List<Coin> coins,
         IInputs input,
-        IRenderer renderer
+        IRenderer renderer,
+        ILanguage language 
     ) {
         this.grid = grid;
         this.player = player;
         this.progress = progress;
         this.coins = coins;
+        this.language = language;
         this.input = input;
         this.renderer = renderer;
     }
 
     public boolean run() {
         renderer.clear();
-        renderer.showMessage("=== Collect the coins ($) - control: " + input.getDeviceName() + " ===");
+        language.printWelcome(renderer, input.getDeviceName());
         renderer.draw(grid, player, progress, coins);
 
         while (running) {
@@ -71,7 +75,7 @@ public class Level {
             return;
         }
         if (command == CommandsEnum.NONE) {
-            renderer.showMessage("Unknown command.");
+            language.printUnknownCommand(renderer);
             return;
         }
 
@@ -79,7 +83,7 @@ public class Level {
         int destinationY = player.getY() + command.getDeltaY();
 
         if (grid.isWall(destinationX, destinationY)) {
-            renderer.showMessage("Wall! You cannot go there.");
+            language.printWall(renderer);
             return;
         }
 
@@ -88,7 +92,7 @@ public class Level {
         renderer.draw(grid, player, progress, coins);
 
         if (allCoinsCollected()) {
-            renderer.showMessage("You collected all coins!");
+            language.printLevelComplete(renderer);
             running = false;
         }
     }
@@ -98,7 +102,7 @@ public class Level {
             if (!coin.isCollected() && coin.isAt(player.getX(), player.getY())) {
                 coin.collect();
                 progress.addScore(coin.getValue());
-                renderer.showMessage("Coin collected! Score: " + progress.getScore());
+                language.printCoinCollected(renderer, progress.getScore());
             }
         }
     }
