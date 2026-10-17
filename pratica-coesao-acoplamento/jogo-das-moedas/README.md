@@ -218,7 +218,7 @@ a estratégia de idiomas, nenhum texto de mensagem pode aparecer em `Level.java`
 | Item | Classe adicionada | Quais OUTROS arquivos você precisou abrir e editar? |
 |---|---|---|
 | 1 | `GUIRenderer` | `rendererEnum.java` (adicionei `GUI`) e `RendererFactory.java` (adicionei `case GUI`)|
-| 2 | `ButtonInputs` | |
+| 2 | `ButtonInputs` | `InputsEnum.java` (adicionei `BUTTONS`) e `InputsFactory.java` (adicionei `case BUTTONS`) |
 | 3 | `VirtualJoystickInput` | |
 
 **2.** Antes de adicionar cada classe, você rodou o jogo pedindo o modo que ainda não
@@ -227,7 +227,7 @@ existia. Qual foi a mensagem de erro, e de qual arquivo ela veio?
 >  **Item 1 (GUI):** A mensagem foi `Renderer must be gui or terminal: gui`, veio de `RendererEnum.from()`, em `RendererEnum.java`, pois
 o enum só tinha `TERMINAL`, então o `valueOf("GUI")` falhou.
 
-> **ITEM 2 (buttons):** 
+> **ITEM 2 (buttons):** A mensagem foi `Mode must be buttons, joystick, or keyboard: buttons`, vinda de `InputsEnum.from()`, porque o enum só tinha `KEYBOARD´.
 
 > **ITEM 3 (joystick):** 
 
@@ -236,7 +236,7 @@ Qual foi o erro do compilador, e por que ele aconteceu?
 
 >  **Item 1 (GUI):**  Só copiar a classe compilou, mas o `-r gui` continuou dando erro, depois de adicionar `GUI` no enum, o javac acusou `the switch expression does not cover all possible input values`, em RendererFactory.java, pois o switch de seta precisa ter uma `case` para cada valor do enum, e faltava o `case GUI`.
 
-> **ITEM 2 (buttons):** 
+> **ITEM 2 (buttons):** Copiar compilou. Depois de por `BUTTONS` no enum, deu erro o do switch incompleto em `InputsFactory.java`. Ao rodar depois da compilação que falhou o `/bin` ficou com  enum novo e a Factory antiga causando `MatchException`.
 
 > **ITEM 3 (joystick):** 
 

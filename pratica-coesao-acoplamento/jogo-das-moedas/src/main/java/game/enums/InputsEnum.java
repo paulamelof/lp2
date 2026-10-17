@@ -3,7 +3,7 @@ package game.enums;
 import java.util.Locale;
 
 public enum InputsEnum {
-    KEYBOARD;
+    KEYBOARD, BUTTONS;
 
     public static InputsEnum from() { return KEYBOARD; }
     public static InputsEnum from(String mode) {
