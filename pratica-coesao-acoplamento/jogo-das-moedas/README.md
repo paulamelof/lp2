@@ -219,7 +219,7 @@ a estratégia de idiomas, nenhum texto de mensagem pode aparecer em `Level.java`
 |---|---|---|
 | 1 | `GUIRenderer` | `rendererEnum.java` (adicionei `GUI`) e `RendererFactory.java` (adicionei `case GUI`)|
 | 2 | `ButtonInputs` | `InputsEnum.java` (adicionei `BUTTONS`) e `InputsFactory.java` (adicionei `case BUTTONS`) |
-| 3 | `VirtualJoystickInput` | |
+| 3 | `VirtualJoystickInput` | `InputsEnum.java` (adicionei `JOYSTICK`) e `InputsFactory.java` (adicionei `case JOYSTICK`) |
 
 **2.** Antes de adicionar cada classe, você rodou o jogo pedindo o modo que ainda não
 existia. Qual foi a mensagem de erro, e de qual arquivo ela veio?
@@ -229,7 +229,7 @@ o enum só tinha `TERMINAL`, então o `valueOf("GUI")` falhou.
 
 > **ITEM 2 (buttons):** A mensagem foi `Mode must be buttons, joystick, or keyboard: buttons`, vinda de `InputsEnum.from()`, porque o enum só tinha `KEYBOARD´.
 
-> **ITEM 3 (joystick):** 
+> **ITEM 3 (joystick):**  A mensagem foi `Mode must be buttons, joystick, or keyboard: joystick`, veio de `InputsEnum.from()`, em `InputsEnum.java`, pois o enum só tinha `KEYBOARD` e `BUTTONS`, então o `valueOf("JOYSTICK")` falhou.
 
 **3.** Depois de copiar a classe para dentro de `src/`, o projeto ainda não compilava.
 Qual foi o erro do compilador, e por que ele aconteceu?
@@ -238,12 +238,12 @@ Qual foi o erro do compilador, e por que ele aconteceu?
 
 > **ITEM 2 (buttons):** Copiar compilou. Depois de por `BUTTONS` no enum, deu erro o do switch incompleto em `InputsFactory.java`. Ao rodar depois da compilação que falhou o `/bin` ficou com  enum novo e a Factory antiga causando `MatchException`.
 
-> **ITEM 3 (joystick):** 
+> **ITEM 3 (joystick):**  Só copiar a classe compilou, mas o `-i joystick` continuou dando erro. Depois de adicionar `JOYSTICK` no enum, o javac acusou `the switch expression does not cover all possible input values` em `InputsFactory.java`, pois faltava o `case JOYSTICK` no switch
 
 **4.** `Level.java` aparece em alguma linha da tabela do item 1? Por que isso é o
 resultado esperado de um projeto com baixo acoplamento?
 
->
+> Não, a level não foi alterada em nenhum dos três itens. Ela só depende das interfaces `IInputs` e `IRenderer`, e não das classes concretas, quem escolhe a implementação é o MainGame, através das factories, e a level recebe o objeto pronto pelo construtor (Injeção de dependência), por isso, adicionar uma entrada ou uma saída nova só mexe na classe nova, no enum e na factory.
 
 ## Item 4 — pares cruzados
 
