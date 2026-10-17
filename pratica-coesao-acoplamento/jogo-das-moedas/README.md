@@ -209,7 +209,7 @@ a estratégia de idiomas, nenhum texto de mensagem pode aparecer em `Level.java`
 - **Versão do JDK** (saída de `java -version`): openjdk 21.0.12
 - **Sistema operacional**: Ubuntu 24.04
 - **Comando de compilação que você usou**: `javac -d bin $(find src/main/java -name "*.java")`
-- **Comando de execução que você usou**: `java -cp bin game.MainGame -i <entrada> -r <saida>`
+- **Comando de execução que você usou**: `java -cp bin game.MainGame -i <entrada> -r <saida> -lang <idioma>`
 
 ## Itens 1 a 3 — as três classes devolvidas
 
@@ -217,33 +217,32 @@ a estratégia de idiomas, nenhum texto de mensagem pode aparecer em `Level.java`
 
 | Item | Classe adicionada | Quais OUTROS arquivos você precisou abrir e editar? |
 |---|---|---|
-| 1 | `GUIRenderer` | `rendererEnum.java` (adicionei `GUI`) e `RendererFactory.java` (adicionei `case GUI`)|
-| 2 | `ButtonInputs` | `InputsEnum.java` (adicionei `BUTTONS`) e `InputsFactory.java` (adicionei `case BUTTONS`) |
-| 3 | `VirtualJoystickInput` | `InputsEnum.java` (adicionei `JOYSTICK`) e `InputsFactory.java` (adicionei `case JOYSTICK`) |
+| 1 | `GUIRenderer` | `RendererEnum.java` (adicionamos `GUI`) e `RendererFactory.java` (adicionamos `case GUI`) |
+| 2 | `ButtonInputs` | `InputsEnum.java` (adicionamos `BUTTONS`) e `InputsFactory.java` (adicionamos `case BUTTONS`) |
+| 3 | `VirtualJoystickInput` | `InputsEnum.java` (adicionamos `JOYSTICK`) e `InputsFactory.java` (adicionamos `case JOYSTICK`) |
 
 **2.** Antes de adicionar cada classe, você rodou o jogo pedindo o modo que ainda não
 existia. Qual foi a mensagem de erro, e de qual arquivo ela veio?
 
->  **Item 1 (GUI):** A mensagem foi `Renderer must be gui or terminal: gui`, veio de `RendererEnum.from()`, em `RendererEnum.java`, pois
-o enum só tinha `TERMINAL`, então o `valueOf("GUI")` falhou.
-
-> **ITEM 2 (buttons):** A mensagem foi `Mode must be buttons, joystick, or keyboard: buttons`, vinda de `InputsEnum.from()`, porque o enum só tinha `KEYBOARD´.
-
-> **ITEM 3 (joystick):**  A mensagem foi `Mode must be buttons, joystick, or keyboard: joystick`, veio de `InputsEnum.from()`, em `InputsEnum.java`, pois o enum só tinha `KEYBOARD` e `BUTTONS`, então o `valueOf("JOYSTICK")` falhou.
+> **Item 1 (GUI):** A mensagem foi `Renderer must be gui or terminal: gui`, veio de `RendererEnum.from()`, em `RendererEnum.java`, pois o enum só tinha `TERMINAL`, então o `valueOf("GUI")` falhou.
+>
+> **Item 2 (buttons):** A mensagem foi `Mode must be buttons, joystick, or keyboard: buttons`, veio de `InputsEnum.from()`, em `InputsEnum.java`, pois o enum só tinha `KEYBOARD`, então o `valueOf("BUTTONS")` falhou.
+>
+> **Item 3 (joystick):** A mensagem foi `Mode must be buttons, joystick, or keyboard: joystick`, veio de `InputsEnum.from()`, em `InputsEnum.java`, pois o enum só tinha `KEYBOARD` e `BUTTONS`, então o `valueOf("JOYSTICK")` falhou.
 
 **3.** Depois de copiar a classe para dentro de `src/`, o projeto ainda não compilava.
 Qual foi o erro do compilador, e por que ele aconteceu?
 
->  **Item 1 (GUI):**  Só copiar a classe compilou, mas o `-r gui` continuou dando erro, depois de adicionar `GUI` no enum, o javac acusou `the switch expression does not cover all possible input values`, em RendererFactory.java, pois o switch de seta precisa ter uma `case` para cada valor do enum, e faltava o `case GUI`.
-
-> **ITEM 2 (buttons):** Copiar compilou. Depois de por `BUTTONS` no enum, deu erro o do switch incompleto em `InputsFactory.java`. Ao rodar depois da compilação que falhou o `/bin` ficou com  enum novo e a Factory antiga causando `MatchException`.
-
-> **ITEM 3 (joystick):**  Só copiar a classe compilou, mas o `-i joystick` continuou dando erro. Depois de adicionar `JOYSTICK` no enum, o javac acusou `the switch expression does not cover all possible input values` em `InputsFactory.java`, pois faltava o `case JOYSTICK` no switch
+> **Item 1 (GUI):** Só copiar a classe compilou, mas o `-r gui` continuou dando erro. Depois de adicionar `GUI` no enum, o javac acusou `the switch expression does not cover all possible input values` em `RendererFactory.java`, pois o switch de seta precisa ter um `case` para cada valor do enum, e faltava o `case GUI`.
+>
+> **Item 2 (buttons):** Só copiar a classe compilou. Depois de adicionar `BUTTONS` no enum, deu o mesmo erro do switch incompleto, agora em `InputsFactory.java`. Ao rodar o jogo depois dessa compilação que falhou, a pasta `bin/` ficou com o enum novo e a factory antiga, o que causou um `MatchException`.
+>
+> **Item 3 (joystick):** Só copiar a classe compilou, mas o `-i joystick` continuou dando erro. Depois de adicionar `JOYSTICK` no enum, o javac acusou `the switch expression does not cover all possible input values` em `InputsFactory.java`, pois faltava o `case JOYSTICK` no switch.
 
 **4.** `Level.java` aparece em alguma linha da tabela do item 1? Por que isso é o
 resultado esperado de um projeto com baixo acoplamento?
 
-> Não, a level não foi alterada em nenhum dos três itens. Ela só depende das interfaces `IInputs` e `IRenderer`, e não das classes concretas, quem escolhe a implementação é o MainGame, através das factories, e a level recebe o objeto pronto pelo construtor (Injeção de dependência), por isso, adicionar uma entrada ou uma saída nova só mexe na classe nova, no enum e na factory.
+> Não, a `Level` não foi alterada em nenhum dos três itens. Ela só depende das interfaces `IInputs` e `IRenderer`, e não das classes concretas. Quem escolhe a implementação é o `MainGame`, através das factories, e a `Level` recebe o objeto pronto pelo construtor (injeção de dependência). Por isso, adicionar uma entrada ou uma saída nova só mexe na classe nova, no enum e na factory.
 
 ## Item 4 — pares cruzados
 
@@ -251,66 +250,102 @@ resultado esperado de um projeto com baixo acoplamento?
 
 | Combinação | Funcionou? | Precisou alterar alguma classe? |
 |---|---|---|
-| `-i buttons -r terminal` | sim | Não |
-| `-i keyboard -r gui` | sim | Não |
+| `-i buttons -r terminal` | Sim | Não |
+| `-i keyboard -r gui` | Sim | Não |
+| `-i joystick -r terminal` | Sim | Não |
 
 **6.** O que essas duas execuções provam sobre a relação entre entrada e saída no projeto?
 
-> A entrada e a saída são independentes, qualquer IInputs combina com qualquer IRenderer. Uma não conhece a outra, exemplo: o ButtonInputs não sabe se a tela é o terminal ou janela, e vice e versa, cada uma é escolhida sepradamente no MainGame (`-i e -r`), com o seu enum e sua factory. A level sí fala com as interfaces, então funciona com qualquer combinação 3 entradas e duas saídas são 6 combinações e nenhum if para isso.
+> A entrada e a saída são independentes: qualquer `IInputs` combina com qualquer `IRenderer`. Uma não conhece a outra (por exemplo, o `ButtonInputs` não sabe se a tela é o terminal ou a janela, e vice-versa). Cada uma é escolhida separadamente no `MainGame` (`-i` e `-r`), com o seu enum e a sua factory. A `Level` só fala com as interfaces, então funciona com qualquer combinação: 3 entradas × 2 saídas = 6 combinações, sem nenhum `if` para isso.
 
 ## Item 5 — a estratégia de idiomas
 
 **7.** Liste os arquivos que você **criou**:
 
->
+> - `game/enums/LanguageEnum.java`
+> - `game/language/ILanguage.java`
+> - `game/language/English.java`
+> - `game/language/Portuguese.java`
+> - `game/language/Spanish.java`
+> - `game/language/LanguageFactory.java`
 
 **8.** Liste os arquivos que você **modificou** e diga, em uma linha cada, o que mudou:
 
+> - `Level.java`: passou a receber `ILanguage` no construtor; as 5 mensagens viraram chamadas como `language.printWall(renderer)`.
+> - `MainGame.java`: ganhou a opção `-lang`, cria o idioma primeiro e o repassa às factories e à `Level`; as 2 mensagens finais viraram chamadas ao idioma.
+> - `TerminalRenderer.java`: recebe `ILanguage` no construtor; o score e o prompt de comando vêm do idioma.
+> - `GUIRenderer.java`: recebe `ILanguage` no construtor; o título da janela e o score vêm do idioma.
+> - `RendererFactory.java`: recebe `ILanguage` no construtor e o repassa aos renderers (o contrato `IFactory` não mudou).
+> - `KeyboardInput.java`, `ButtonInputs.java`, `VirtualJoystickInput.java`: recebem `ILanguage` no construtor; nomes de dispositivo, rótulos dos botões e títulos das janelas vêm do idioma.
+> - `InputsFactory.java`: recebe `ILanguage` no construtor e o repassa às entradas.
 >
+> Nenhuma das classes protegidas (`IInputs`, `IRenderer`, `IFactory`, `Grid`, `Player` etc.) foi alterada.
 
 **9.** `ILanguage` ficou como **interface** ou como **classe abstrata**? Justifique usando
 o mesmo critério da tabela da seção "Interface para contrato, classe abstrata para reúso".
 
+> **Interface.** Pelo critério da tabela: os três idiomas não compartilham estado nem código, só frases diferentes. Não há nada a herdar, só um contrato a cumprir, como em `IInputs`. Como visto na Aula 07, interfaces servem como contrato relacionado apenas a métodos, sem atributos (estado), que é exatamente o caso dos idiomas.
 >
+> Uma `abstract class Language` com um atributo `IRenderer` também traria problemas:
+> 1. **Dependência circular:** os renderers precisam do idioma (para o score, o prompt e o título), e o idioma precisaria do renderer. Um teria que existir antes do outro.
+> 2. **A factory não teria como passar o renderer:** `IFactory.create(K key)` recebe só a chave (`LanguageEnum`).
+> 3. **As entradas também usam o idioma** (rótulos dos botões, nomes) e não têm renderer nenhum.
+>
+> Recebendo o renderer como parâmetro, o idioma fica sem estado e serve para qualquer renderer.
 
 **10.** Por que os métodos de `ILanguage` recebem **dados** (como o valor do score) em vez
 de receberem o texto pronto? O que aconteceria com o design se `Level` montasse a frase e
 passasse a `String` para a classe de idioma?
 
+> Porque quem monta a frase é quem conhece o idioma. Cada língua organiza a frase de um jeito ("Moeda coletada! Pontuação: 10" × "¡Moneda recogida! Puntuación: 10"), então a `Level` passa só o dado e o idioma decide onde ele entra.
 >
+> Se a `Level` montasse a `String`, ela voltaria a conter texto num idioma específico, e para trocar de idioma precisaria de `if/switch` por idioma dentro dela. A classe de idioma viraria só um repassador inútil, e a `Level` voltaria a ser acoplada ao idioma.
 
 **11.** Rode `grep -n "new \|System.out" src/main/java/game/Level.java` e também procure
 por texto literal entre aspas em `Level.java`. Sobrou alguma mensagem? Se sim, qual e por quê?
 
+> O `grep` não devolve nada: a `Level` não cria objetos nem imprime. Também não sobrou nenhuma mensagem entre aspas. O único texto entre aspas no arquivo é a palavra `"new"` dentro de um comentário.
 >
+> Fora do pacote de idiomas, mantivemos em inglês apenas as **mensagens de exceção técnicas** (ex.: `Missing value for -lang.`, `Language must be...`, erros do `LevelLoader`). Elas não são mensagens do jogo, mas erros de uso do programa, e várias acontecem antes de o idioma ser conhecido. Além disso, o `LevelLoader` não pode ser alterado.
 
 **12.** Quantos arquivos você precisaria modificar para adicionar um **quarto idioma**
 (por exemplo, francês)? Liste-os.
 
+> 3 arquivos, e nenhuma classe do jogo muda:
+> - **criar** `game/language/French.java` (implementando `ILanguage`);
+> - **modificar** `LanguageEnum.java` (adicionar `FRENCH`);
+> - **modificar** `LanguageFactory.java` (adicionar `case FRENCH -> new French();`).
 >
+> `Level`, `MainGame`, renderers e entradas continuam iguais.
 
 **13.** `KeyboardInput.getDeviceName()` devolve `"Keyboard"`, que aparece na tela.
 Esse texto **deve** ser traduzido? Não existe resposta única aqui — defenda a sua.
 
->
+> Na nossa implementação, **sim, traduzimos**. "Keyboard" não é uma marca, é um substantivo comum que aparece dentro da mensagem de boas-vindas. Deixá-lo em inglês geraria uma frase misturada, tipo "Colete as moedas - controle: Keyboard". Pelo mesmo motivo traduzimos os rótulos dos botões e os títulos das janelas. Se fosse um nome próprio de produto, não traduziríamos, porque nome de marca não muda com o idioma.
 
 ## Item 6 — diagrama UML
 
 **14.** Com que ferramenta você fez o diagrama?
 
->
+  > Mermaid (mermaid.live). O diagrama está em `diagrama-uml.png`, na raiz do projeto.
+  >
+  > ![Diagrama UML](diagrama-uml.png)
 
 **15.** Confirme: o diagrama mostra **apenas** herança (generalização) e implementação de
-interface (realização), sem associações entre classes?  `[ ] sim`
+interface (realização), sem associações entre classes?  `[X] sim`
 
 ## Fechamento
 
 **16.** Compare com a v1 mostrada em aula: quantos arquivos mudam lá, e quantos mudam
 aqui, para adicionar uma entrada nova? O que explica a diferença?
 
+> **Na v1**, não existia contrato de entrada: a classe `Game` tinha um `boolean useJoystick` e dois atributos concretos (`KeyboardInput keyboard` e `JoystickInput joystick`), um deles sempre `null`. A escolha do dispositivo estava espalhada em vários pontos da `Game`: no construtor (escolhe entre os dois inputs), no `readCommand()` (roteia a leitura), no `deviceName()` (pega o nome para a tela) e no `waitCommand()`. Para adicionar uma terceira entrada (ex.: mouse), seria preciso criar a classe nova e mexer em todos esses pontos da `Game`, que é a classe de regras, além do `MainGame`. E o `boolean` nem comporta um terceiro valor, então a própria estrutura teria que ser refeita.
 >
+> **Na v2**, são 3 arquivos: a classe nova, o `InputsEnum` e a `InputsFactory`, e a `Level` não muda. A diferença vem da inversão de dependência: a `Level` depende só do contrato `IInputs` e recebe o objeto pronto pelo construtor (injeção de dependência). Quem decide qual implementação concreta usar é o `MainGame`, via factory, num único lugar.
 
 **17.** Alguma parte do projeto que você achou **mais acoplada do que precisava**?
 Crítica honesta conta ponto — aponte o lugar e diga o que faria.
 
->
+> 1. **O terminal sempre mostra "Comando (w/a/s/d, q para sair)", mesmo quando estamos usando botões ou joystick.** Essa dica só faz sentido para o teclado. Ou seja, o `TerminalRenderer` (saída) "assume" que a entrada é sempre o teclado, e isso é um acoplamento escondido entre entrada e saída.
+> 2. **Com botões ou joystick no terminal, o programa não fecha sozinho.** Rodando `-i buttons -r terminal`, depois de clicar em "Sair" aparece o "Final score", mas o terminal continua travado e não aceita mais nada. Tivemos que usar Ctrl+C para encerrar. Parece que a janela dos controles continua aberta "segurando" o programa. Com `-r gui` isso não acontece, porque fechar a janela do jogo encerra tudo. Achamos que as janelas de entrada deveriam ser fechadas quando o jogo termina.
+> 3. **Depois de "Wall!" ou "Unknown command." o terminal não reimprime o prompt**, e parece que o jogo travou.
