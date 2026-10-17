@@ -43,8 +43,8 @@ public class MainGame {
                 "Level must be between 1 and " + grids.size() + ".");
 
         IInputs input = new InputsFactory().create(options.inputMode());
-        IRenderer renderer = new RendererFactory().create(options.rendererMode());
         ILanguage language = new LanguageFactory().create(options.languageMode());
+        IRenderer renderer = new RendererFactory(language).create(options.rendererMode());
 
         Progress progress = new Progress();
 
