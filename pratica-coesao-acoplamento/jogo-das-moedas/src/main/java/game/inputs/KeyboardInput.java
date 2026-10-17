@@ -3,6 +3,7 @@ package game.inputs;
 import java.util.Scanner;
 
 import game.enums.CommandsEnum;
+import game.language.ILanguage;
 
 /**
  * Traduz teclas digitadas no console em comandos do jogo.
@@ -14,8 +15,10 @@ import game.enums.CommandsEnum;
 public class KeyboardInput implements IInputs {
 
     private final Scanner scanner;
+    private final ILanguage language;
 
-    public KeyboardInput() {
+    public KeyboardInput(ILanguage language) {
+        this.language = language;
         this.scanner = new Scanner(System.in);
     }
 
@@ -37,6 +40,6 @@ public class KeyboardInput implements IInputs {
 
     @Override
     public String getDeviceName() {
-        return "Keyboard";
+        return language.keyboardName();
     }
 }

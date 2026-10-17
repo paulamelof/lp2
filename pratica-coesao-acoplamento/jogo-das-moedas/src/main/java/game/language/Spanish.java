@@ -53,4 +53,55 @@ public class Spanish implements ILanguage {
     public String windowTitle() {
         return "Juego de las Monedas";
     }
+
+
+    @Override
+    public String keyboardName() {
+        return "Teclado";
+    }
+
+    @Override
+    public String buttonsName() {
+        return "Botones";
+    }
+
+    @Override
+    public String joystickName() {
+        return "Joystick Virtual (ratón)";
+    }
+
+    @Override
+    public String buttonsWindowTitle() {
+        return "Controles";
+    }
+
+    @Override
+    public String joystickWindowTitle() {
+        return "Joystick Virtual";
+    }
+
+    @Override
+    public String upLabel() {
+        return "Arriba";
+    }
+
+    @Override
+    public String downLabel() {
+        return "Abajo";
+    }
+
+    @Override
+    public String leftLabel() {
+        return "Izquierda";
+    }
+
+    @Override
+    public String rightLabel() {
+        return "Derecha";
+    }
+
+    @Override
+    public String exitLabel() {
+        return "Salir";
+    }
 }

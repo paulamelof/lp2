@@ -53,4 +53,54 @@ public class Portuguese implements ILanguage {
     public String windowTitle() {
         return "Jogo das Moedas";
     }
+
+    @Override
+    public String keyboardName() {
+        return "Teclado";
+    }
+
+    @Override
+    public String buttonsName() {
+        return "Botões";
+    }
+
+    @Override
+    public String joystickName() {
+        return "Joystick Virtual (mouse)";
+    }
+
+    @Override
+    public String buttonsWindowTitle() {
+        return "Controles";
+    }
+
+    @Override
+    public String joystickWindowTitle() {
+        return "Joystick Virtual";
+    }
+
+    @Override
+    public String upLabel() {
+        return "Cima";
+    }
+
+    @Override
+    public String downLabel() {
+        return "Baixo";
+    }
+
+    @Override
+    public String leftLabel() {
+        return "Esquerda";
+    }
+
+    @Override
+    public String rightLabel() {
+        return "Direita";
+    }
+
+    @Override
+    public String exitLabel() {
+        return "Sair";
+    }
 }

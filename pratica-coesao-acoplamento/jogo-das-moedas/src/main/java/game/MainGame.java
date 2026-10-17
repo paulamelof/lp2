@@ -10,6 +10,8 @@ import game.enums.LanguageEnum;
 import game.enums.RendererEnum;
 import game.inputs.IInputs;
 import game.inputs.InputsFactory;
+import game.language.ILanguage;
+import game.language.LanguageFactory;
 import game.ui.IRenderer;
 import game.ui.RendererFactory;
 import game.utils.LevelLoader;
@@ -17,8 +19,6 @@ import game.world.Grid;
 import game.world.Progress;
 import game.world.gobjects.Coin;
 import game.world.gobjects.Player;
-import game.language.ILanguage;
-import game.language.LanguageFactory;
 
 /**
  * Este e o unico lugar do sistema que decide QUAIS pecas concretas serao usadas.
@@ -42,8 +42,8 @@ public class MainGame {
             throw new IllegalArgumentException(
                 "Level must be between 1 and " + grids.size() + ".");
 
-        IInputs input = new InputsFactory().create(options.inputMode());
         ILanguage language = new LanguageFactory().create(options.languageMode());
+        IInputs input = new InputsFactory(language).create(options.inputMode());
         IRenderer renderer = new RendererFactory(language).create(options.rendererMode());
 
         Progress progress = new Progress();
@@ -82,7 +82,7 @@ public class MainGame {
                     if (++index >= args.length)
                         throw new IllegalArgumentException("Missing value for -r.");
                     rendererMode = RendererEnum.from(args[index]);
-                }  
+                }
                 case "-l" -> {
                     if (++index >= args.length)
                         throw new IllegalArgumentException("Missing value for -l.");
@@ -94,14 +94,14 @@ public class MainGame {
                     languageMode = LanguageEnum.from(args[index]);
                 }
                 default -> throw new IllegalArgumentException(
-                    "Unknown option: " + args[index] + ". Use -i, -r, -l, or -lang."); 
+                    "Unknown option: " + args[index] + ". Use -i, -r, -l, or -lang.");
             }
         }
 
         return new LaunchOptions(
             inputMode == null ? InputsEnum.from() : inputMode,
             rendererMode == null ? RendererEnum.from() : rendererMode,
-            languageMode == null ? LanguageEnum.from() : languageMode, 
+            languageMode == null ? LanguageEnum.from() : languageMode,
             levelNumber
         );
     }
