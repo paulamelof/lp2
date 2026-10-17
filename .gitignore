@@ -1,0 +1,9 @@
+# Bytecode e pastas de build
+bin/
+out/
+*.class
+
+# Lixo de sistema e editor
+.DS_Store
+__MACOSX/
+.vscode/
