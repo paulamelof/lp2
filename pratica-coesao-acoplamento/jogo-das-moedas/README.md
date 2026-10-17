@@ -202,7 +202,7 @@ a estratégia de idiomas, nenhum texto de mensagem pode aparecer em `Level.java`
 | | Nome completo | Matrícula |
 |---|---|---|
 | Integrante 1 | Ana Paula Evangelista Melo Freitas | 20250041027 |
-| Integrante 2 | *(deixe em branco se fez individualmente)* | |
+| Integrante 2 | Gabriel Soares Ferreira de França | 20250055612 |
 
 ## Ambiente
 
@@ -251,12 +251,12 @@ resultado esperado de um projeto com baixo acoplamento?
 
 | Combinação | Funcionou? | Precisou alterar alguma classe? |
 |---|---|---|
-| `-i buttons -r terminal` | | |
-| `-i keyboard -r gui` | | |
+| `-i buttons -r terminal` | sim | Não |
+| `-i keyboard -r gui` | sim | Não |
 
 **6.** O que essas duas execuções provam sobre a relação entre entrada e saída no projeto?
 
->
+> A entrada e a saída são independentes, qualquer IInputs combina com qualquer IRenderer. Uma não conhece a outra, exemplo: o ButtonInputs não sabe se a tela é o terminal ou janela, e vice e versa, cada uma é escolhida sepradamente no MainGame (`-i e -r`), com o seu enum e sua factory. A level sí fala com as interfaces, então funciona com qualquer combinação 3 entradas e duas saídas são 6 combinações e nenhum if para isso.
 
 ## Item 5 — a estratégia de idiomas
 
