@@ -3,7 +3,7 @@ package game.enums;
 import java.util.Locale;
 
 public enum RendererEnum {
-    TERMINAL;
+    TERMINAL, GUI;
 
     public static RendererEnum from() { return TERMINAL; }
 
